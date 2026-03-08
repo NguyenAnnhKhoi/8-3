@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chúc mừng 8/3 💖</title>
+
+  <!-- Google Font dễ thương -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================
+       RESET & BIẾN MÀU
+    ============================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+.gif-wrapper img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+    :root {
+      --pink-light: #ffe4f0;
+      --pink-mid:   #ffb3d9;
+      --pink-hot:   #ff6eb4;
+      --purple-light: #f3e8ff;
+      --purple-mid:   #d8b4fe;
+      --purple-hot:   #a855f7;
+      --text-dark:  #5b2d8e;
+      --text-pink:  #d63b8e;
+      --white:      #ffffff;
+    }
+
+    /* ============================
+       NỀN TRANG & FONT
+    ============================ */
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, var(--pink-light) 0%, var(--purple-light) 50%, var(--pink-light) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ============================
+       CANVAS RƠI TRÁI TIM / HOA
+    ============================ */
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Không chặn click */
+      z-index: 0;
+    }
+
+    /* ============================
+       LAYOUT CHÍNH
+    ============================ */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      padding: 40px 16px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 36px;
+    }
+
+    /* ============================
+       TIÊU ĐỀ LỚN
+    ============================ */
+    .hero {
+      text-align: center;
+    }
+
+    .hero .date-badge {
+      display: inline-block;
+      background: var(--pink-hot);
+      color: var(--white);
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(1rem, 4vw, 1.4rem);
+      font-weight: 800;
+      padding: 6px 24px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(255, 110, 180, 0.45);
+      letter-spacing: 2px;
+    }
+
+    .hero h1 {
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(1.8rem, 6vw, 3.2rem);
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1.25;
+      text-shadow: 2px 3px 0px var(--purple-mid);
+    }
+
+    .hero h1 span {
+      color: var(--text-pink);
+      display: block;
+    }
+
+    .hero .subtitle {
+      margin-top: 12px;
+      font-size: clamp(0.95rem, 3vw, 1.2rem);
+      color: var(--purple-hot);
+      font-weight: 700;
+    }
+
+    /* ============================
+       THẺ LỜI CHÚC
+    ============================ */
+    .wishes-section {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .wishes-section h2 {
+      text-align: center;
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      color: var(--text-dark);
+      margin-bottom: 18px;
+    }
+
+    .wishes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    /* Mỗi thẻ lời chúc */
+    .wish-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 22px 20px;
+      box-shadow: 0 6px 24px rgba(168, 85, 247, 0.15);
+      border: 2px solid var(--purple-mid);
+      transition: transform 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dải màu trên đầu thẻ */
+    .wish-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--pink-hot), var(--purple-hot));
+      border-radius: 20px 20px 0 0;
+    }
+
+    .wish-card:hover {
+      transform: translateY(-5px) rotate(-0.5deg);
+      box-shadow: 0 14px 32px rgba(168, 85, 247, 0.25);
+    }
+
+    .wish-card .emoji {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .wish-card p {
+      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+      color: var(--text-dark);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    /* ============================
+       NÚT BẤM BẤT NGỜ
+    ============================ */
+    .surprise-section {
+      text-align: center;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    #surprise-btn {
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(1rem, 3.5vw, 1.25rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--pink-hot), var(--purple-hot));
+      color: var(--white);
+      border: none;
+      padding: 16px 36px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255, 110, 180, 0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    #surprise-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 12px 30px rgba(168, 85, 247, 0.5);
+    }
+
+    #surprise-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Hộp lời chúc bất ngờ (ẩn mặc định) */
+    #surprise-box {
+      display: none;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #fff0f7, #f3e8ff);
+      border: 2px dashed var(--pink-hot);
+      border-radius: 20px;
+      padding: 22px 20px;
+      animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    #surprise-box p {
+      font-size: clamp(0.95rem, 3vw, 1.15rem);
+      color: var(--text-dark);
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.7) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ============================
+       KHU VỰC GIF / MEME
+    ============================ */
+    .meme-section {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .meme-section h2 {
+      text-align: center;
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      color: var(--text-dark);
+      margin-bottom: 18px;
+    }
+
+    .meme-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+    }
+
+    /* Mỗi khung meme */
+    .meme-card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 22px rgba(255, 110, 180, 0.2);
+      border: 2px solid var(--pink-mid);
+      max-width: 320px;
+      width: 100%;
+      transition: transform 0.25s;
+    }
+
+    .meme-card:hover {
+      transform: rotate(1deg) scale(1.03);
+    }
+
+    /* Sử dụng iframe embed từ Giphy để tránh lưu GIF nặng */
+    .meme-card .gif-wrapper {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+    }
+
+    .meme-card .gif-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .meme-card .meme-caption {
+      padding: 12px 14px;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
+      font-weight: 700;
+      color: var(--text-pink);
+      text-align: center;
+    }
+
+    /* ============================
+       CHÂN TRANG
+    ============================ */
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--purple-hot);
+      font-weight: 600;
+      padding: 10px 0 30px;
+    }
+
+    footer span {
+      color: var(--pink-hot);
+    }
+
+    /* ============================
+       RESPONSIVE TINH CHỈNH
+    ============================ */
+    @media (max-width: 480px) {
+      .page-wrapper { gap: 28px; }
+      .wishes-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Canvas vẽ hiệu ứng rơi -->
+  <canvas id="canvas"></canvas>
+
+  <div class="page-wrapper">
+
+    <!-- ====== TIÊU ĐỀ CHÍNH ====== -->
+    <div class="hero" role="banner">
+      <div class="date-badge">✨ 8 / 3 / 2026 ✨</div>
+      <h1>
+        Chúc mừng
+        <span>Nguyễn Thị Ngọc Thùy 💖</span>
+      </h1>
+      <p class="subtitle">Nhân ngày Quốc tế Phụ nữ — Happy Women's Day! 🌸</p>
+    </div>
+    <section class="meme-section" aria-label="Meme vui nhộn">
+
+      <div class="meme-grid">
+
+        <!-- GIF 1: Mèo bắt tay chúc mừng via Giphy -->
+        <div class="meme-card">
+         <div class="gif-wrapper">
+  <img src="Propose I Love You GIF.gif" alt="GIF dễ thương" />
+</div>
+      
+        </div>
+
+    <!-- ====== LỜI CHÚC MEME ====== -->
+    <section class="wishes-section" aria-label="Lời chúc hài hước">
+      <h2>🎉 Những lời chúc từ trái tim XD</h2>
+      <div class="wishes-grid">
+
+        <!-- Thẻ 1 -->
+        <div class="wish-card">
+          <span class="emoji">📸</span>
+          <p>Chúc em luôn xinh đẹp như filter TikTok — không cần chỉnh tay mà vẫn đẹp tự nhiên!</p>
+        </div>
+
+
+        <!-- Thẻ 4 -->
+        <div class="wish-card">
+          <span class="emoji">✨</span>
+          <p>Chúc em luôn vui vẻ, ăn hoài không lên cân và ngủ hoài không trễ deadline — 3 điều không tưởng nhưng vẫn chúc!</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====== NÚT BẤT NGỜ ====== -->
+    <section class="surprise-section" aria-label="Lời chúc bất ngờ">
+      <!-- Nút bấm -->
+      <button id="surprise-btn" onclick="showSurprise()">Nhấn vào đây nè 👀</button>
+
+      <!-- Hộp lời chúc bất ngờ — ẩn cho đến khi nhấn nút -->
+      <div id="surprise-box" role="alert" aria-live="polite">
+        <p id="surprise-text"></p>
+      </div>
+    </section>
+
+    <!-- ====== MEME / GIF ====== -->
+
+
+      </div>
+    </section>
+
+    <!-- ====== CHÂN TRANG ====== -->
+    <footer>
+      Làm bằng tất cả <span>💖</span> &amp; đấy 😤😤😤😤😤😤
+    </footer>
+
+  </div><!-- end .page-wrapper -->
+
+  <script>
+   
+    (function initFallingEffect() {
+      const canvas = document.getElementById('canvas');
+      const ctx    = canvas.getContext('2d');
+
+      // Danh sách ký tự sẽ rơi
+      const symbols = ['💖', '🌸', '💕', '🌺', '💗', '🎀', '✨', '💜', '🩷'];
+
+      let particles = []; // Mảng chứa tất cả hạt
+
+      /* Thiết lập kích thước canvas = kích thước cửa sổ */
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      /* Tạo một hạt mới ở vị trí ngẫu nhiên trên cùng */
+      function createParticle() {
+        return {
+          x:      Math.random() * canvas.width,      // vị trí ngang ngẫu nhiên
+          y:      -40,                                // bắt đầu ngoài màn hình phía trên
+          size:   Math.random() * 18 + 14,            // kích thước 14–32px
+          speed:  Math.random() * 1.5 + 0.6,         // tốc độ rơi 0.6–2.1
+          drift:  (Math.random() - 0.5) * 0.8,       // lắc ngang nhẹ
+          symbol: symbols[Math.floor(Math.random() * symbols.length)],
+          opacity: Math.random() * 0.5 + 0.5,        // độ mờ 50–100%
+          angle:  Math.random() * Math.PI * 2,       // góc xoay ban đầu
+          spin:   (Math.random() - 0.5) * 0.05,      // tốc độ xoay
+        };
+      }
+
+      /* Khởi tạo số hạt ban đầu */
+      const PARTICLE_COUNT = 35;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const p = createParticle();
+        p.y = Math.random() * canvas.height; // phân tán đều khi load
+        particles.push(p);
+      }
+
+      /* Vòng lặp animation */
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((p, idx) => {
+          // Cập nhật vị trí
+          p.y     += p.speed;
+          p.x     += p.drift;
+          p.angle += p.spin;
+
+          // Vẽ ký tự
+          ctx.save();
+          ctx.globalAlpha = p.opacity;
+          ctx.font        = `${p.size}px serif`;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.angle);
+          ctx.fillText(p.symbol, 0, 0);
+          ctx.restore();
+
+          // Khi rơi ra khỏi màn hình → tạo hạt mới ở trên
+          if (p.y > canvas.height + 50) {
+            particles[idx] = createParticle();
+          }
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    })();
+
+
+    /* ============================================================
+       2. NÚT BẤT NGỜ
+       - Mỗi lần nhấn hiện một lời chúc ngẫu nhiên khác nhau
+    ============================================================ */
+    const surpriseWishes = [
+      "🌈 Chúc em mỗi ngày thức dậy đều đẹp hơn hôm qua — không phải vì filter mà vì em THẬT SỰ đẹp lên rồi đó! 💅",
+      "🍜 Chúc em luôn gặp đúng người chia bill 50/50, không bao giờ gặp người 'quên ví'! 😤",
+      "☕ Chúc em cà phê sáng nào cũng ngon và wifi sáng nào cũng mạnh! 📶",
+      "🐱 Chúc em cuộc đời nhanh hơn internet và nhẹ nhàng hơn deadline! Bestie cũng chúc thêm một cái nữa cho chắc! 🎉",
+      "💸 Chúc em tiết kiệm được tiền mua đồ ăn vặt — nói chúc thôi chứ biết chắc không được đâu 😂",
+      "🌸 Chúc em luôn là main character trong câu chuyện của mình — không phải NPC chạy nền nhé! 🎬",
+      "🧸 Chúc em ngủ ngon mỗi đêm, không lo âu, không crisis lúc 2 giờ sáng — chứ ai cũng lo lắm rồi! 😴",
+    ];
+
+    let lastSurpriseIdx = -1; // Tránh hiện lại lời chúc vừa xong
+
+    function showSurprise() {
+      const box  = document.getElementById('surprise-box');
+      const text = document.getElementById('surprise-text');
+
+      // Chọn ngẫu nhiên, tránh trùng lời chúc vừa hiện
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * surpriseWishes.length);
+      } while (idx === lastSurpriseIdx && surpriseWishes.length > 1);
+      lastSurpriseIdx = idx;
+
+      text.textContent = surpriseWishes[idx];
+
+      // Reset animation mỗi lần nhấn để chạy lại hiệu ứng popIn
+      box.style.display = 'none';
+      // Dùng requestAnimationFrame để trình duyệt ghi nhận display:none trước
+      requestAnimationFrame(() => {
+        box.style.display = 'block';
+      });
+    }
+  </script>
+
+</body>
+</html>
